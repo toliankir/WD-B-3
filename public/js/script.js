@@ -12,7 +12,9 @@ const userName = document.querySelector("#userName");
 const userPassword = document.querySelector("#userPassword");
 
 let socket = null;
-let token = "";
+let token = window.localStorage.getItem("token") ?
+    {token: window.localStorage.getItem("token")}
+    : null;
 
 function showChat(state) {
     chatSection.style.display = state;
@@ -20,19 +22,13 @@ function showChat(state) {
     sendContainer.style.display = state;
 }
 
-
 function login(login, password) {
     const xhr = new XMLHttpRequest();
-
     xhr.onreadystatechange = () => {
         if (xhr.readyState !== 4) return;
         if (xhr.status === 200) {
-            const response = JSON.parse(xhr.responseText);
-            token = response;
-             socket = io.connect({
-                query: response
-            });
-            addSocketHandlers(socket);
+            token = JSON.parse(xhr.responseText);
+            socketConnect();
         }
     };
 
@@ -45,8 +41,7 @@ function login(login, password) {
 }
 
 document.addEventListener("DOMContentLoaded", function (event) {
-    connectOnLoad();
-
+    socketConnect();
     loginForm.addEventListener("submit", (ev) => {
         ev.preventDefault();
         if (!userName.value || !userPassword.value) {
@@ -69,13 +64,20 @@ document.addEventListener("DOMContentLoaded", function (event) {
             console.log("%cMessage is empty", "color:red");
             return;
         }
-        socket.emit("sendMessage", )
+        socket.emit("messageRequest", "test");
     });
 
 });
 
 
-function addSocketHandlers(socket) {
+function socketConnect() {
+    if (!token.token) {
+        return;
+    }
+    socket = io.connect({
+        query: token
+    });
+
     socket.on("connect", () => {
         window.localStorage.setItem("token", token.token);
         loadingSection.style.display = "none";
@@ -90,17 +92,4 @@ function addSocketHandlers(socket) {
         loginSection.style.display = "block";
         console.log("%cUser is unauthorized", "color:red");
     });
-}
-
-function connectOnLoad() {
-    token = {
-        token: window.localStorage.getItem("token")
-    };
-    if (!token.token) {
-        return;
-    }
-    socket = io.connect({
-        query: token
-    });
-    addSocketHandlers(socket);
 }

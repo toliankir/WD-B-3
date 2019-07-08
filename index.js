@@ -28,7 +28,6 @@ io.use((socket, next) => {
     const token = socket.handshake.query.token;
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) socket.disconnect();
-        console.log(decoded);
     });
     next();
 });
@@ -67,12 +66,12 @@ async function socketHandler(io) {
             });
         });
 
-        socket.on("loginRequest", async (user) => {
-            if (await userLogin(user)) {
-                socket.emit("loginResponse", {
-                    userStatus: "user login"
-                });
-            }
+
+        socket.on("messageRequest", async() => {
+            const token = socket.handshake.query.token;;
+            jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+                console.log(decoded.login);
+            });
         });
     });
 }
