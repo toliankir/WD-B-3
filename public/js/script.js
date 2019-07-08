@@ -3,6 +3,9 @@ const loadingSection = document.querySelector("#loadingContainer");
 const chatSection = document.querySelector("#chatContainer");
 const chatLogout = document.querySelector("#chatLogout");
 const sendContainer = document.querySelector("#sendContainer ");
+const sendForm = document.querySelector("#sendForm");
+const message = document.querySelector("#message");
+
 
 const loginForm = document.querySelector("#loginForm");
 const userName = document.querySelector("#userName");
@@ -18,10 +21,6 @@ function showChat(state) {
 }
 
 
-function userStatusCheck() {
-    socket.emit("statusRequest", {});
-}
-
 function login(login, password) {
     const xhr = new XMLHttpRequest();
 
@@ -30,7 +29,7 @@ function login(login, password) {
         if (xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
             token = response;
-            socket = io.connect({
+             socket = io.connect({
                 query: response
             });
             addSocketHandlers(socket);
@@ -60,7 +59,17 @@ document.addEventListener("DOMContentLoaded", function (event) {
         if (!socket) {
             return;
         }
-        console.log(socket);
+        socket.close();
+        window.localStorage.removeItem("token");
+    });
+
+    sendForm.addEventListener("submit", (ev) => {
+        ev.preventDefault();
+        if (!message.value.trim()) {
+            console.log("%cMessage is empty", "color:red");
+            return;
+        }
+        socket.emit("sendMessage", )
     });
 
 });
@@ -87,7 +96,7 @@ function connectOnLoad() {
     token = {
         token: window.localStorage.getItem("token")
     };
-    if (!token) {
+    if (!token.token) {
         return;
     }
     socket = io.connect({

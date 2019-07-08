@@ -10,10 +10,6 @@ const jwt = require("jsonwebtoken");
 
 const userLogin = require("./userController");
 
-const connections = [];
-const authUsers = [];
-
-
 mongoose.connect(process.env.MONGO_DB_URL, {useNewUrlParser: true}, function (err) {
     if (err) throw err;
     console.log(`Mongoose DB successfully connected: ${process.env.MONGO_DB_URL}`);
@@ -30,12 +26,12 @@ app.use(bodyParser.json());
 
 io.use((socket, next) => {
     const token = socket.handshake.query.token;
-    jwt.verify(token, process.env.CRYPT_SALT_ROUNDS, (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) socket.disconnect();
+        console.log(decoded);
     });
     next();
 });
-
 
 app.post("/", (req, res) => {
     userPostLogin(req.body, res);
@@ -45,33 +41,34 @@ socketHandler(io);
 
 
 async function userPostLogin(user, response) {
-    if (!(await userLogin(user))) {
+    let userId;
+    if (!(userId = await userLogin(user))) {
         response.send({status: "error"});
         return;
     }
-    const token = jwt.sign(user, process.env.CRYPT_SALT_ROUNDS);
+    const token = jwt.sign({
+        login: user.login,
+        _id : userId
+    }, process.env.JWT_SECRET);
     response.send({token: token});
 }
 
 async function socketHandler(io) {
     io.sockets.on("connection", (socket) => {
-        // connections.push(socket);
         console.log('User connected');
 
         socket.on("disconnect", () => {
-            connections.splice(connections.indexOf(socket) - 1);
             console.log("User disconnected");
         });
 
         socket.on("statusRequest", () => {
             socket.emit("statusResponse", {
-                userAuth: "test"
+                userAuth: true
             });
         });
 
         socket.on("loginRequest", async (user) => {
             if (await userLogin(user)) {
-                authUsers.push(socket);
                 socket.emit("loginResponse", {
                     userStatus: "user login"
                 });
