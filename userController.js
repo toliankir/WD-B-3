@@ -1,8 +1,8 @@
 require('dotenv').config();
-const bcrypt = require("bcrypt");
-const mongoose = require("mongoose");
+const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
 
-const User = require("./userModel");
+const User = require('./userModel');
 
 async function hashedPassword(password) {
     return await new Promise((resolve, reject) => {
@@ -21,7 +21,7 @@ async function createUser(user) {
             password: await hashedPassword(user.password)
         }, (err) => {
             if (err) reject(err);
-            console.log(`User "${user.login}" created`);
+            console.log(`User '${user.login}' created`);
             resolve();
         });
     });
@@ -48,7 +48,7 @@ module.exports = async function userLogin(user) {
     }
     let userId;
     if (!(userId = await checkUser(user))) {
-        console.log(`User ${user.login} wrong password "${user.password}"`);
+        console.log(`User ${user.login} wrong password '${user.password}'`);
         return false;
     }
     console.log(`User ${user.login} login`);
