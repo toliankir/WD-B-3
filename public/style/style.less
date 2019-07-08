@@ -1,0 +1,242 @@
+@chatWidth: 40%;
+@chatWidth1200: 60%;
+@chatWidth700: 90%;
+html {
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100%;
+  background-color: #b9c783;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-line {
+  height: 10px;
+  display: flex;
+  &__part- {
+    &black {
+      flex: 1;
+      background-color: #635960;
+    }
+    &green {
+      flex: 1;
+      background-color: #8b8e59;
+    }
+    &yellow {
+      flex: 1;
+      background-color: #eada7d;
+    }
+    &light-yellow {
+      flex: 1;
+      background-color: #fffecd;
+    }
+    &blue {
+      flex: 1;
+      background-color: #7bc3ab;
+    }
+  }
+}
+
+header {
+  font-family: 'Pacifico', cursive;
+  font-size: 4.5rem;
+  color: #fffecd;
+  padding-bottom: 2rem;
+  text-align: center;
+  flex-basis: 30vh;
+  min-height: 8.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+main {
+  flex-basis: 33vh;
+  position: relative;
+  text-align: center;
+
+}
+
+#chatContainer {
+  display: none;
+}
+
+#loginContainer {
+  display: block;
+}
+
+#loadingContainer {
+  display: flex;
+  height: 33vh;
+  align-items: center;
+  font-family: 'Montserrat', sans-serif;
+  color: #fffecd;
+  font-size: 2rem;
+  justify-content: center;
+}
+
+#chatData {
+  display: inline-block;
+  background-color: #fffecd;
+  text-align: left;
+  height: 33vh;
+  overflow: scroll;
+  overflow-x: hidden;
+  width: @chatWidth;
+  padding: 1rem;
+  min-height: 250px;
+  & ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+}
+
+.chat-bold {
+  font-weight: 800;
+}
+
+.image-smile {
+  height: 0.8rem;
+  display: inline-block;
+  margin: 0;
+}
+
+#loginForm {
+  font-family: 'Montserrat', sans-serif;
+  text-align: left;
+  display: inline-block;
+  width: 300px;
+}
+
+.loginForm-section {
+  height: 5.5rem;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+
+.loginForm-section:last-child {
+  text-align: center;
+  & span {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: red;
+  }
+}
+
+label {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #635960;
+  margin-bottom: 0.3rem;
+}
+
+input {
+  display: inline-block;
+  width: 100%;
+  background-color: #fffecd;
+  color: #a8a4a8;
+  border: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  padding: 0.7rem;
+  font-weight: 600;
+
+}
+#visualEffect {
+  position: relative;
+}
+
+
+
+#visualEffect:before {
+  content: '';
+  z-index: -1;
+  left: 0;
+  width: 100%;
+  position: absolute;
+  height: 100%;
+  transform-origin: 100% 0;
+  transform: matrix(1, -0.135, 2.5, 4, 0, 0);
+  background: linear-gradient(0, rgba(0, 0, 0, 0), rgba(63, 59, 60, 0.5));;
+}
+
+footer {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
+  padding-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+#sendContainer {
+  width: @chatWidth;
+  display: none;
+}
+
+@media screen and (max-width: 1200px) {
+  #chatData {
+    width: @chatWidth1200;
+  }
+
+  #sendContainer {
+    width: @chatWidth1200;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  #chatData {
+    width: @chatWidth700;
+  }
+
+  #sendContainer {
+    width: @chatWidth700;
+  }
+}
+
+#message {
+  width: 75%;
+}
+
+#sendMessage {
+  width: 20%;
+  float: right;
+}
+
+
+.form__button {
+  background-color: #635960;
+  color: #fffecd;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  text-indent: 0;
+  cursor: pointer;
+}
+
+.form__button-light {
+  background-color: #b9c783;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  color: #fffecd;
+  cursor: pointer;
+}
+
+#chatLogout {
+  position: absolute;
+  right: 25px;
+  top: 15px;
+  width: auto;
+  display: none;
+}

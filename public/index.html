@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>WD-B-3</title>
+    <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:600,800" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style/style.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+<div class="top-line">
+    <div class="top-line__part-black"></div>
+    <div class="top-line__part-green"></div>
+    <div class="top-line__part-yellow"></div>
+    <div class="top-line__part-light-yellow"></div>
+    <div class="top-line__part-blue"></div>
+    <div class="top-line__part-black"></div>
+    <div class="top-line__part-green"></div>
+    <div class="top-line__part-yellow"></div>
+    <div class="top-line__part-light-yellow"></div>
+    <div class="top-line__part-blue"></div>
+</div>
+<form id="chatLogout">
+    <input class="form__button-light" title="Logout" type="button" value="Logout">
+</form>
+<header>
+    Easy Chat
+</header>
+<main>
+    <div id="loadingContainer">
+        Loading...
+    </div>
+
+    <div id="loginContainer">
+        <form action="#" id="loginForm">
+            <div class="loginForm-section">
+                <label for="userName">Enter your name</label>
+                <input type="text" id="userName">
+            </div>
+            <div class="loginForm-section">
+                <label for="userPassword">Enter your password</label>
+                <input type="password" id="userPassword">
+            </div>
+            <div class="loginForm-section">
+                <span id="errorResponse"></span>
+                <div id="visualEffect"><input class="form__button" type="Submit" value="Submit"></div>
+            </div>
+        </form>
+    </div>
+
+    <div id="chatContainer">
+        <div id="chatData">
+            <ul id="chatDataList">
+            </ul>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div id="sendContainer">
+        <form id="sendForm">
+            <input title="Message" type="text" id="message">
+            <input class="form__button" type="Submit" id="sendMessage" value="Send">
+        </form>
+    </div>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+
+</html>
