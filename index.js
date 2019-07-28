@@ -12,7 +12,7 @@ const userLogin = require('./userController');
 const messageHandler = require('./messageController');
 
 
-mongoose.connect(process.env.MONGO_DB_URL, {useNewUrlParser: true}, function (err) {
+mongoose.connect(process.env.MONGO_DB_URL, { useNewUrlParser: true }, function (err) {
     if (err) throw err;
     console.log(`Mongoose DB successfully connected: ${process.env.MONGO_DB_URL}`);
 });
@@ -23,7 +23,7 @@ server.listen(process.env.HTTP_SERVER_PORT, err => {
 });
 
 app.use('/', express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 io.use((socket, next) => {
@@ -42,6 +42,10 @@ socketHandler(io);
 
 
 async function userPostLogin(user, response) {
+    if (!user.hasOwnProperty('login') || !user.hasOwnProperty('password')) {
+        response.send({ status: 'error: wrong request' });
+        return;
+    }
     let userId;
     if (!(userId = await userLogin(user))) {
         response.send({status: 'error'});

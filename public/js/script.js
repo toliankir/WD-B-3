@@ -15,7 +15,7 @@ const userPassword = document.querySelector('#userPassword');
 
 let socket = null;
 let token = window.localStorage.getItem('token') ?
-    {token: window.localStorage.getItem('token')}
+    { token: window.localStorage.getItem('token') }
     : null;
 
 function showChat(state) {
@@ -25,21 +25,21 @@ function showChat(state) {
 }
 
 function login(login, password) {
-    const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = () => {
-        if (xhr.readyState !== 4) return;
-        if (xhr.status === 200) {
-            token = JSON.parse(xhr.responseText);
+    fetch('/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            login: login,
+            password: password
+        }),
+    })
+        .then(resp => resp.json())
+        .then(resp => {
+            token = resp;
             socketConnect();
-        }
-    };
-
-    xhr.open('POST', '/', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({
-        login: login,
-        password: password
-    }));
+        });
 }
 
 document.addEventListener('DOMContentLoaded', function (event) {
@@ -72,9 +72,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
 });
 
-
 function messageAdd(message) {
-
     const messageElement = document.createElement('li');
     messageElement.innerHTML = `<span class='chat-bold'>${message.owner.login}: </span>${
         message.data
@@ -84,9 +82,8 @@ function messageAdd(message) {
     chatData.scrollTop = chatDataList.offsetHeight + (2 * parseInt(getComputedStyle(chatData).padding)) - chatData.offsetHeight;
 }
 
-
 function socketConnect() {
-    if (!token.token) {
+    if (!token || !token.token) {
         return;
     }
     socket = io.connect({
@@ -117,6 +114,4 @@ function socketConnect() {
     socket.on('messageResponse', (response) => {
         messageAdd(response);
     });
-
-
 }
