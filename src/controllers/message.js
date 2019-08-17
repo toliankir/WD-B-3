@@ -11,7 +11,7 @@ module.exports.saveMessage = async (ownerId, data) => {
     return await newMessage.save();
 };
 
-module.exports.getHistory = async () => {
+module.exports.getHistory = () => {
     return new Promise((resolve, reject) => {
         Message
             .find({})

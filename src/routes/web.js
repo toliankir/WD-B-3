@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const userLogin = require('../controllers/user');
+const { userLogin } = require('../controllers/user');
 
-router.post('/', async ({ body: { login, password } }, res) => {
+module.exports = router.post('/', async ({ body: { login, password } }, res) => {
     if (!login || !password) {
         res.send({ status: 'error: wrong request' });
         return;
     }
 
     let userId;
-    if (!(userId = await userLogin({login, password}))) {
+    if (!(userId = await userLogin({ login, password }))) {
         res.send({ status: 'error' });
         return;
     }
@@ -20,5 +20,3 @@ router.post('/', async ({ body: { login, password } }, res) => {
     }, process.env.JWT_SECRET);
     res.send({ token: token });
 });
-
-module.exports = router;

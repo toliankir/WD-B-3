@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 
 const User = require('../mongo_models/user');
 
-async function hashedPassword(password) {
-    return await new Promise((resolve, reject) => {
+function hashedPassword(password) {
+    return new Promise((resolve, reject) => {
         bcrypt.hash(password, parseInt(process.env.CRYPT_SALT_ROUNDS), (err, hash) => {
             if (err) reject(err);
             resolve(hash);
@@ -13,7 +13,7 @@ async function hashedPassword(password) {
     });
 }
 
-async function createUser(login, password) {
+function createUser(login, password) {
     return new Promise(async (resolve, reject) => {
         User.create({
             _id: new mongoose.Types.ObjectId,
@@ -41,7 +41,7 @@ async function checkUser(login, password) {
     return await bcrypt.compare(password, userHashed.password) ? userHashed._id : false;
 }
 
-module.exports = async ({ login, password }) => {
+module.exports.userLogin = async ({ login, password }) => {
     if (!(await userExist(login))) {
         console.log(`User ${login} don't exist`);
         await createUser(login, password);
