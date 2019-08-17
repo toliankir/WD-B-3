@@ -4,7 +4,7 @@ const chatSection = document.querySelector('#chatContainer');
 const chatData = document.querySelector('#chatData');
 const chatDataList = document.querySelector('#chatDataList');
 const chatLogout = document.querySelector('#chatLogout');
-const sendContainer = document.querySelector('#sendContainer ');
+const sendContainer = document.querySelector('#sendContainer');
 const sendForm = document.querySelector('#sendForm');
 const message = document.querySelector('#message');
 
@@ -83,6 +83,7 @@ function messageAdd(message) {
 }
 
 function socketConnect() {
+    loadingSection.style.display = 'none';
     if (!token || !token.token) {
         return;
     }
@@ -90,9 +91,10 @@ function socketConnect() {
         query: token
     });
 
+
     socket.on('connect', () => {
         window.localStorage.setItem('token', token.token);
-        loadingSection.style.display = 'none';
+    
         loginSection.style.display = 'none';
         showChat('block');
         console.info('%cUser is authorized', 'color:green');

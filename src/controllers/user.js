@@ -2,7 +2,7 @@ require('dotenv').config();
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 
-const User = require('./userModel');
+const User = require('../mongo_models/user');
 
 async function hashedPassword(password) {
     return await new Promise((resolve, reject) => {
@@ -13,15 +13,15 @@ async function hashedPassword(password) {
     });
 }
 
-async function createUser(user) {
+async function createUser(login, password) {
     return new Promise(async (resolve, reject) => {
         User.create({
             _id: new mongoose.Types.ObjectId,
-            login: user.login,
-            password: await hashedPassword(user.password)
+            login,
+            password: await hashedPassword(password)
         }, (err) => {
             if (err) reject(err);
-            console.log(`User '${user.login}' created`);
+            console.log(`User '${login}' created`);
             resolve();
         });
     });
@@ -29,28 +29,28 @@ async function createUser(user) {
 
 function userExist(login) {
     return new Promise((resolve, reject) => {
-        User.find({login: login}, (err, users) => {
+        User.find({ login: login }, (err, users) => {
             if (err) reject(err);
             resolve(users.length > 0);
         });
     })
 }
 
-async function checkUser(user) {
-    const userHashed = await User.findOne({login: user.login});
-    return await bcrypt.compare(user.password, userHashed.password) ? userHashed._id : false;
+async function checkUser(login, password) {
+    const userHashed = await User.findOne({ login });
+    return await bcrypt.compare(password, userHashed.password) ? userHashed._id : false;
 }
 
-module.exports = async function userLogin(user) {
-    if (!(await userExist(user.login))) {
-        console.log(`User ${user.login} don't exist`);
-        await createUser(user);
+module.exports = async ({ login, password }) => {
+    if (!(await userExist(login))) {
+        console.log(`User ${login} don't exist`);
+        await createUser(login, password);
     }
     let userId;
-    if (!(userId = await checkUser(user))) {
-        console.log(`User ${user.login} wrong password '${user.password}'`);
+    if (!(userId = await checkUser(login, password))) {
+        console.log(`User ${login} wrong password '${password}'`);
         return false;
     }
-    console.log(`User ${user.login} login`);
+    console.log(`User ${login} login`);
     return userId;
 };

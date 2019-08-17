@@ -1,18 +1,17 @@
 const mongoose = require('mongoose');
 
-const Message = require('./messageModel');
+const Message = require('../mongo_models/message');
 
-module.exports.saveMessage = async function (ownerId, data) {
+module.exports.saveMessage = async (ownerId, data) => {
     const newMessage = new Message({
         _id: new mongoose.Types.ObjectId,
         owner: ownerId,
-        data: data
+        data
     });
     return await newMessage.save();
 };
 
-
-module.exports.getHistory = async function getHistory() {
+module.exports.getHistory = async () => {
     return new Promise((resolve, reject) => {
         Message
             .find({})
