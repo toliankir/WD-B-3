@@ -7,14 +7,14 @@ const routes = require('./routes/web');
 const { mongoConnect } =require('./services/mongo');
 const HTTP_PORT = process.env.HTTP_SERVER_PORT || 3000;
 
-mongoConnect();
+// mongoConnect();
 
 //express middlewares 
-require('./middleware/express')(app);
+// require('./middleware/express')(app);
 //express routes
-app.use(routes);
+// app.use(routes);
 //Socket.io middlewares
-require('./middleware/io')(io);
+// require('./middleware/io')(io);
 
 require('./services/io')(io);
 
