@@ -16,8 +16,6 @@ app.use(routes);
 //Socket.io middlewares
 // require('./middleware/io')(io);
 
-require('./services/io')(io);
-
 server.listen(HTTP_PORT, err => {
     if (err) throw err;
     console.log(`Server start on port ${HTTP_PORT}`);
