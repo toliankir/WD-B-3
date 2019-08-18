@@ -23,7 +23,7 @@ module.exports = (io) => {
             const token = socket.handshake.query.token;
             jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
                 const savedMessage = await saveMessage(decoded._id, data);
-                socket.emit('messageResponse', {
+                io.emit('messageResponse', {
                     data: savedMessage.data,
                     createdAt: savedMessage.createdAt,
                     owner: {
