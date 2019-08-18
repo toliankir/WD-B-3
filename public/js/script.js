@@ -24,8 +24,8 @@ function showChat(state) {
     sendContainer.style.display = state;
 }
 
-function login(login, password) {
-    fetch('/', {
+async function login(login, password) {
+    const responseData = await fetch('/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -34,12 +34,9 @@ function login(login, password) {
             login: login,
             password: password
         }),
-    })
-        .then(resp => resp.json())
-        .then(resp => {
-            token = resp;
-            socketConnect();
-        });
+    });
+    token = await responseData.json();
+    socketConnect();
 }
 
 document.addEventListener('DOMContentLoaded', function (event) {
@@ -94,7 +91,7 @@ function socketConnect() {
 
     socket.on('connect', () => {
         window.localStorage.setItem('token', token.token);
-    
+
         loginSection.style.display = 'none';
         showChat('block');
         console.info('%cUser is authorized', 'color:green');

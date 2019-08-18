@@ -9,11 +9,12 @@ module.exports = router.post('/', async ({ body: { login, password } }, res) => 
         return;
     }
 
-    let userId;
-    if (!(userId = await userLogin({ login, password }))) {
+    let userId = await userLogin({ login, password });
+    if (!userId) {
         res.send({ status: 'error' });
         return;
     }
+
     const token = jwt.sign({
         login: login,
         _id: userId

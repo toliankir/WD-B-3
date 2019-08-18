@@ -3,9 +3,6 @@ const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
-const jwt = require('jsonwebtoken');
-
-const message = require('./controllers/message');
 const routes = require('./routes/web');
 const { mongoConnect } =require('./services/mongo');
 const HTTP_PORT = process.env.HTTP_SERVER_PORT || 3000;
