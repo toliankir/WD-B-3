@@ -1,16 +1,13 @@
 require('dotenv').config();
-const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
+const crypto = require('crypto');
 
 const User = require('../mongo_models/user');
 
 function hashedPassword(password) {
-    return new Promise((resolve, reject) => {
-        bcrypt.hash(password, parseInt(process.env.CRYPT_SALT_ROUNDS), (err, hash) => {
-            if (err) reject(err);
-            resolve(hash);
-        });
-    });
+        return crypto.createHmac('sha256', process.env.CRYPT_SALT_ROUNDS)
+            .update(password)
+            .digest('hex');
 }
 
 function createUser(login, password) {
@@ -18,7 +15,7 @@ function createUser(login, password) {
         User.create({
             _id: new mongoose.Types.ObjectId,
             login,
-            password: await hashedPassword(password)
+            password: hashedPassword(password)
         }, (err) => {
             if (err) reject(err);
             console.log(`User '${login}' created`);
@@ -38,7 +35,8 @@ function userExist(login) {
 
 async function checkUser(login, password) {
     const userHashed = await User.findOne({ login });
-    return await bcrypt.compare(password, userHashed.password) ? userHashed._id : false;
+    const hashed = hashedPassword(password);
+    return userHashed.password === hashed ? userHashed._id : false;
 }
 
 module.exports.userLogin = async ({ login, password }) => {
