@@ -1,5 +1,10 @@
 #!/bin/bash
 
+PORT=3000
+MONGO_DB_URL="mongodb://172.17.0.3/chat"
+CRYPT_SALT_ROUNDS=5
+JWT_SECRET=SHPP
+
 PID_FILE="/run/chatService.pid"
 LOG_FILE="/var/log/chatService.log"
 LOG_ERR_FILE="/var/log/chatService.error.log"
@@ -8,6 +13,25 @@ APP_DIR="/home/WD-B-3"
 APP="/src/index.js"
 NODE="node"
 USAGE="Usage: $0 {start|stop|restart|status|info}"
+
+##############################################################################
+#
+# First of all, set variables in top of this file according to your evironment
+# values.
+#
+# Copy "chat" script file to /etc/init.d folder, you may need root \
+# permiossions for it.
+#
+# Now you can run Chat Service.
+# For running service run command "service chat start"
+# For stop - "service chat stop"
+# For restart - "service chat restart"
+# Got getting information about service state - "service chat state"
+#
+# Also you may not copy chat script file to /etc/init.d folder, you may run it
+# directly from chat project folder. For example "./chat start"
+#
+##############################################################################
 
 pid_file_exists() {
     [ -f "$PID_FILE" ]
@@ -30,11 +54,17 @@ start() {
 	    echo "$APP_NAME already running, pid: $(get_pid)"
 	    exit 1
 	fi
-	echo "$APP_NAME not running, but pid file exists, pid: $(get_pid)"
-	echo "Delete $PID_FILE, for running"
+	echo "$APP_NAME not running, but pid file exists, pid: $(get_pid)."
+	echo "Delete $PID_FILE or stop service, for running."
 	exit 1
     fi
     echo "Start $APP_NAME"
+    cd $APP_DIR
+    set -a
+    PORT=$PORT
+    MONGO_DB_URL=$MONGO_DB_URL
+    CRYPT_SALT_ROUNDS=$CRYPT_SALT_ROUNDS
+    JWT_SECRET=$JET_SECRET
     $NODE $APP_DIR$APP >> $LOG_FILE 2>> $LOG_ERR_FILE & echo $! > $PID_FILE
     exit 1
 }
