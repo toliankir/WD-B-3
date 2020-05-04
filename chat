@@ -16,11 +16,11 @@ USAGE="Usage: $0 {start|stop|restart|status|info}"
 
 ##############################################################################
 #
-# First of all, set variables in top of this file according to your evironment
+# First of all, set variables in top of this file according to your environment
 # values.
 #
-# Copy "chat" script file to /etc/init.d folder, you may need root \
-# permiossions for it.
+# Copy "chat" script file to /etc/init.d folder, you may need root
+# permissions for it.
 #
 # Now you can run Chat Service.
 # For running service run command "service chat start"
