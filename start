@@ -1,0 +1,53 @@
+#!/bin/bash
+
+PID_FILE="/run/chatService.pid"
+LOG_FILE="/var/log/chatService.log"
+LOG_ERR_FILE="/var/log/chatService.error.log"
+APP_DIR="/home"
+APP="/src/index.js"
+NODE="node"
+USAGE="Usage: $0 {start|stop|restart|status}"
+
+pid_file_exists() {
+    [ -f "$PID_FILE" ]
+}
+
+get_pid() {
+    echo "$(cat "$PID_FILE")"
+}
+
+is_running() {
+    PID="$(get_pid)"
+    [ -d /proc/$PID ]
+}
+
+
+
+start() {
+    echo "Start"
+    $NODE $APP_DIR$APP & echo $! > $PID_FILE
+    exit 1
+}
+
+stop() {
+    echo "Stop"
+    PID="$(get_pid)"
+    kill $PID
+    wait $PID
+    exit 1
+}
+
+#node ./src/index.js &
+case "$1" in
+    start)
+	start
+	;;
+    stop)
+	stop
+	;;
+    *)
+	echo $USAGE
+	exit 1
+	;;
+esac
+
